@@ -1,0 +1,41 @@
+spring:
+  profiles: 
+    active: dev
+  primes-in-range:
+    max-range-max: 3000000
+    max-range-size: 1000000
+  concurrency:
+    primes-in-range:
+      num-threads: 3
+      interval-per-thread: 10000
+    default:
+      num-threads: 3
+      max-thread-time-milliseconds: 1000
+  rate-limit:
+    anonymous:
+      CAPACITY: 10
+      REFILL_RATE: 4
+    global:
+      CAPACITY: 1000
+      REFILL_RATE: 20
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  secret-key: 1bef3f99d2bf4abda0c27a68821a728f1bef3f99d2bf4abda0c27a68821a728f1bef3f99d2bf4abda0c27a68821a728f
+logging:
+  level:
+    root: INFO
+    org:
+      hibernate: INFO
+      springframework:
+        orm:
+          jpa: INFO
