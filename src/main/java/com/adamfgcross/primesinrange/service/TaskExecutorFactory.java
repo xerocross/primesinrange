@@ -1,4 +1,4 @@
-package com.adamfgcross.primesinrange.helper;
+package com.adamfgcross.primesinrange.service;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

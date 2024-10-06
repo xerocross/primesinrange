@@ -1,4 +1,4 @@
-package com.adamfgcross.primesinrange.helper;
+package com.adamfgcross.primesinrange.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,9 +28,6 @@ import org.springframework.stereotype.Component;
 import com.adamfgcross.primesinrange.domain.PrimesInRangeTask;
 import com.adamfgcross.primesinrange.domain.PrimesInRangeTaskContext;
 import com.adamfgcross.primesinrange.domain.TaskStatus;
-import com.adamfgcross.primesinrange.service.PrimesInRangeDataUpdateService;
-import com.adamfgcross.primesinrange.service.PrimesInRangeWorkUpdate;
-import com.adamfgcross.primesinrange.service.TaskStoreService;
 import com.adamfgcross.primesinrange.task.ComputePrimesInRangeCallable;
 
 import jakarta.annotation.PostConstruct;
@@ -54,9 +51,6 @@ public class PrimesInRangeHelper {
 	
 	@Autowired
 	private TaskStoreService<List<String>> primesInRangeTaskStoreService;
-	
-	@Autowired
-	private TaskStoreService<Void> dbUpdateTaskStoreService;
 	
 	@Autowired
 	private TaskExecutorFactory taskExecutorFactory;
@@ -165,11 +159,7 @@ public class PrimesInRangeHelper {
 
 		var tasks = generateTasksForSubranges(subranges);
 		List<CompletableFuture<List<String>>> computationFutures;
-		// List<CompletableFuture<Void>> dbUpdateFutures;
 		var taskId = primesInRangeTask.getId();
-		// a countdown latch is used for scheduling shutdown of 
-		// db update thread
-		// CountDownLatch latch = new CountDownLatch(tasks.size());
 
 		// we synchronize scheduling the tasks and creating and storing their futures
 		// to avoid a possible race condition that may occur if the user cancels
@@ -239,18 +229,9 @@ public class PrimesInRangeHelper {
 					f.cancel(true);
 				});
 			});
-			// cancel database update futures
-			dbUpdateTaskStoreService.getTaskFutures(primesInRangeTask.getId())
-			.ifPresent(futures -> {
-				logger.info("found " + futures.size() + "db update futures");
-				futures.forEach(f -> {
-					logger.info("cancelling db update future");
-					f.cancel(true);
-				});
-			});
+
 			// remove the futures so they can be garbage-collected
 			primesInRangeTaskStoreService.removeTaskFutures(primesInRangeTask.getId());
-			dbUpdateTaskStoreService.removeTaskFutures(primesInRangeTask.getId());
 			primesInRangeDataUpdateService.markTaskStatusCancelled(primesInRangeTask.getId());
 			logger.info("task %d was successfully cancelled", primesInRangeTask.getId());
 		} finally {

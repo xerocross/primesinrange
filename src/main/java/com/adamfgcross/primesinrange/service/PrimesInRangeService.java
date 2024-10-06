@@ -15,7 +15,6 @@ import com.adamfgcross.primesinrange.domain.Task;
 import com.adamfgcross.primesinrange.domain.User;
 import com.adamfgcross.primesinrange.dto.PrimesInRangeRequest;
 import com.adamfgcross.primesinrange.dto.PrimesInRangeResponse;
-import com.adamfgcross.primesinrange.helper.PrimesInRangeHelper;
 import com.adamfgcross.primesinrange.repository.TaskRepository;
 
 
