@@ -155,6 +155,8 @@ public class PrimesInRangeHelper {
 				continue;
 			}
 		}
+		executorService.shutdown();
+		dbUpdateExecutorService.shutdown();
     }
 	
 	public void computePrimesInRange(PrimesInRangeTaskContext primesInRangeTaskContext) {
